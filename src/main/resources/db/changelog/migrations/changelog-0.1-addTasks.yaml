@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/migrations/changelog-0.1-addTasks.yaml
+  - changeSet:
+      id: 001_add_tasks
+      author: Flawden
+      changes:
+        - createTable:
+            tableName: task_entity
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: varchar(100)
+              - column:
+                  name: description
+                  type: varchar(500)
+              - column:
+                  name: status
+                  type: varchar(50)
+              - column:
+                  name: priority
+                  type: varchar(50)

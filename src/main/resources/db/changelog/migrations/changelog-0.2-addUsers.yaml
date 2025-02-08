@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/migrations/changelog-0.2-addUsers.yaml
+  - changeSet:
+      id: 001_add_users
+      author: Flawden
+      changes:
+        - createTable:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+              - column:
+                  name: role
+                  type: smallint
+
+  - changeSet:
+      id: 002_add_task_user_relation
+      author: Flawden
+      changes:
+        - createTable:
+            tableName: task_user
+            columns:
+              - column:
+                  name: task_id
+                  type: bigint
+              - column:
+                  name: user_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            baseTableName: task_user
+            baseColumnNames: task_id
+            constraintName: fk_task_user_task
+            referencedTableName: task_entity
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: task_user
+            baseColumnNames: user_id
+            constraintName: fk_task_user_user
+            referencedTableName: user_entity
+            referencedColumnNames: id
+            onDelete: CASCADE

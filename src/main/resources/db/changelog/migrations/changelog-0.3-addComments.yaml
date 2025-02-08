@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/migrations/changelog-0.3-addComments.yaml
+  - changeSet:
+      id: 003_add_comments
+      author: Flawden
+      changes:
+        - createTable:
+            tableName: comment_entity
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: text
+                  type: varchar(255)
+              - column:
+                  name: author_id
+                  type: bigint
+              - column:
+                  name: task_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            baseTableName: comment_entity
+            baseColumnNames: author_id
+            referencedTableName: user_entity
+            referencedColumnNames: id
+            constraintName: fk_comment_author
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: comment_entity
+            baseColumnNames: task_id
+            referencedTableName: task_entity
+            referencedColumnNames: id
+            constraintName: fk_comment_task
