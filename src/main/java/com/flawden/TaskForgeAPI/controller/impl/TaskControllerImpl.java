@@ -1,6 +1,8 @@
 package com.flawden.TaskForgeAPI.controller.impl;
 
 import com.flawden.TaskForgeAPI.controller.TaskController;
+import com.flawden.TaskForgeAPI.dto.task.Priority;
+import com.flawden.TaskForgeAPI.dto.task.Status;
 import com.flawden.TaskForgeAPI.dto.task.Task;
 import com.flawden.TaskForgeAPI.exception.TaskNotFoundException;
 import com.flawden.TaskForgeAPI.exception.UserAlreadyHaveThisTaskException;
@@ -41,11 +43,15 @@ public class TaskControllerImpl implements TaskController {
      */
     @GetMapping
     @Override
-    public ResponseEntity<List<Task>> getAllTasks(Integer page, Integer limit) {
-        if (page == null) {
+    public ResponseEntity<List<Task>> getAllTasks(Integer page, Integer limit, String title, Status status, Priority priority) {
+        if (page == null && limit == null && title == null && status == null && priority == null) {
             return ResponseEntity.ok(taskService.getAllTasks());
-        } else {
+        } if (page != null && limit != null) {
             return ResponseEntity.ok(taskService.getTasksWithPagination(page, limit));
+        }  if (title != null || status != null || priority != null) {
+            return ResponseEntity.ok(taskService.getTasksWithFiltration(title, status, priority));
+        } else {
+            return ResponseEntity.ok(taskService.getTasksWithPaginationAndFiltration(page, limit, title, status, priority));
         }
     }
 

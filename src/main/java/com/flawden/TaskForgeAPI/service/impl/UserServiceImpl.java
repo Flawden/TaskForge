@@ -9,6 +9,7 @@ import com.flawden.TaskForgeAPI.repository.UserRepository;
 import com.flawden.TaskForgeAPI.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,6 +96,7 @@ public class UserServiceImpl implements UserService {
      * @return добавленный пользователь {@link User}.
      */
     @Override
+    @Transactional
     public User addUser(User user) {
         return userMapper.mapUserEntityToUser(userRepository.save(userMapper.mapUserToUserEntity(user)));
     }
@@ -111,6 +113,7 @@ public class UserServiceImpl implements UserService {
      * @throws UserNotFoundException если пользователь не найден.
      */
     @Override
+    @Transactional
     public void updateUser(UpdateUser user, Long userId) {
         UserEntity updatableUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         updatableUser.setEmail(user.getEmail());
@@ -128,6 +131,7 @@ public class UserServiceImpl implements UserService {
      * @param id идентификатор пользователя.
      */
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

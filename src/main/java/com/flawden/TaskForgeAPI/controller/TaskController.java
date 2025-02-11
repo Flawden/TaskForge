@@ -1,6 +1,8 @@
 package com.flawden.TaskForgeAPI.controller;
 
+import com.flawden.TaskForgeAPI.dto.task.Status;
 import com.flawden.TaskForgeAPI.dto.task.Task;
+import com.flawden.TaskForgeAPI.dto.task.Priority;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -40,7 +42,11 @@ public interface TaskController {
             @ApiResponse(responseCode = "200", description = "Задачи успешно получены"),
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
     })
-    ResponseEntity<List<Task>> getAllTasks(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit);
+    ResponseEntity<List<Task>> getAllTasks(@RequestParam(value = "page", required = false) Integer page,
+                                           @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit,
+                                           @RequestParam(value = "title", required = false) String title,
+                                           @RequestParam(value = "status", required = false) Status status,
+                                           @RequestParam(value = "priority", required = false) Priority priority);
 
     /**
      * Получение задачи по её ID.

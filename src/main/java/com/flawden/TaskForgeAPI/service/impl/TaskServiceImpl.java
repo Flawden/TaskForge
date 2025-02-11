@@ -12,6 +12,7 @@ import com.flawden.TaskForgeAPI.model.UserEntity;
 import com.flawden.TaskForgeAPI.repository.TaskRepository;
 import com.flawden.TaskForgeAPI.repository.UserRepository;
 import com.flawden.TaskForgeAPI.service.TaskService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -68,6 +69,21 @@ public class TaskServiceImpl implements TaskService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Task> getTasksWithFiltration(String title, Status status, Priority priority) {
+        return taskRepository.findByTitleContainingAndStatusAndPriority(title, status, priority).stream()
+                .map(this::mapTaskEntityToTask)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Task> getTasksWithPaginationAndFiltration(Integer page, Integer size, String title, Status status, Priority priority) {
+        Pageable pageable = PageRequest.of(page, size);
+        return taskRepository.findByTitleContainingAndStatusAndPriority(title, status, priority, pageable).stream()
+                .map(this::mapTaskEntityToTask)
+                .collect(Collectors.toList());
+    }
+
     /**
      * Преобразует {@link TaskEntity} в {@link Task}.
      *
@@ -120,6 +136,7 @@ public class TaskServiceImpl implements TaskService {
      * @throws TaskNotFoundException если задача не найдена.
      */
     @Override
+    @Transactional
     public void updateTask(Task task, Long taskId) {
         TaskEntity updatableTask = taskRepository.findById(taskId).orElseThrow(TaskNotFoundException::new);
         updatableTask.setTitle(task.getTitle());
@@ -138,6 +155,7 @@ public class TaskServiceImpl implements TaskService {
      * @param id идентификатор задачи.
      */
     @Override
+    @Transactional
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }
@@ -172,6 +190,7 @@ public class TaskServiceImpl implements TaskService {
      * @throws UserAlreadyHaveThisTaskException если задача уже назначена пользователю.
      */
     @Override
+    @Transactional
     public void assignTaskToUser(Long userId, Long taskId) {
         TaskEntity task = taskRepository.findById(taskId).orElseThrow(TaskNotFoundException::new);
         UserEntity user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
