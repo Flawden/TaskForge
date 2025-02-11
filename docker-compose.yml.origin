@@ -1,0 +1,30 @@
+services:
+  database:
+    image: postgres:15
+    container_name: postgres-taskmanager
+    environment:
+      POSTGRES_DB: task-manager
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskforge-api
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/task-manager
+      SPRING_DATASOURCE_USERNAME:
+      SPRING_DATASOURCE_PASSWORD:
+      SPRING_LIQUIBASE_CHANGE_LOG: classpath:/db/changelog/changelog-master.yaml
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+
+volumes:
+  postgres_data:

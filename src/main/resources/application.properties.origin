@@ -1,4 +1,4 @@
-spring.application.name=TaskManagerAPI
+spring.application.name=TaskForgeAPI
 
 spring.datasource.url =
 spring.datasource.username =
